@@ -62,6 +62,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 | 参数                                        | 类型   | 默认值                                                       | 描述                                                         |
 | ------------------------------------------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `commonLabels`                              | object | `{}`                                                         | Common labels to add to the resources                        |
 | `replicaCount`                              | int    | `1`                                                          | Desired number of pods, leaderElection will be enabled if this is greater than 1 |
 | `image.repository`                          | string | `registry-vpc.__ACK_REGION_ID__.aliyuncs.com/acs/spark-operator` | Image repository                                             |
 | `image.pullPolicy`                          | string | `IfNotPresent`                                               | Image pull policy                                            |

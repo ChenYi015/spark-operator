@@ -62,6 +62,7 @@ helm uninstall -n spark-operator ack-spark-operator3.0
 
 | 参数                                        | 类型   | 默认值                                                       | 描述                                                         |
 | ------------------------------------------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `commonLabels`                              | object | `{}`                                                         | 自定义的资源标签                                             |
 | `replicaCount`                              | int    | `1`                                                          | 期望的 Pod 副本数量，如果副本数大于 1，则进行领导人选举。    |
 | `image.repository`                          | string | `registry-vpc.__ACK_REGION_ID__.aliyuncs.com/acs/spark-operator` | 镜像名称                                                     |
 | `image.pullPolicy`                          | string | `IfNotPresent`                                               | 镜像拉取策略                                                 |
