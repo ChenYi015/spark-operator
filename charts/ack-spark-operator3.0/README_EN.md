@@ -73,6 +73,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `rbac.create`                               | bool   | `false`                                                      | **DEPRECATED** use `createRole` and `createClusterRole`      |
 | `rbac.createRole`                           | bool   | `true`                                                       | Create and use RBAC `Role` resources                         |
 | `rbac.createClusterRole`                    | bool   | `true`                                                       | Create and use RBAC `ClusterRole` resources                  |
+| `rbac.annotations`                          | object | `{}`                                                         | Optional annotations for RBAC resources                      |
 | `serviceAccounts.spark.create`              | bool   | `true`                                                       | Create a service account for spark apps                      |
 | `serviceAccounts.spark.name`                | string | `""`                                                         | Optional name for the spark service account                  |
 | `serviceAccounts.spark.annotations`         | object | `{}`                                                         | Optional annotations for the spark service account           |

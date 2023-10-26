@@ -73,6 +73,7 @@ helm uninstall -n spark-operator ack-spark-operator3.0
 | `rbac.create`                               | bool   | `false`                                                      | **已废弃**，请使用 `createRole` 和 `createClusterRole`       |
 | `rbac.createRole`                           | bool   | `true`                                                       | 创建并使用 RBAC `Role` 资源                                  |
 | `rbac.createClusterRole`                    | bool   | `true`                                                       | 创建并使用 RBAC `ClusterRole` 资源                           |
+| `rbac.annotations`                          | object | `{}`                                                         | 可选，为 RBAC 资源添加额外注解信息                           |
 | `serviceAccounts.spark.create`              | bool   | `true`                                                       | 是否为 spark 应用创建一个 service account                    |
 | `serviceAccounts.spark.name`                | string | `""`                                                         | 可选，指定 spark 应用使用的 service account 名称             |
 | `serviceAccounts.spark.annotations`         | object | `{}`                                                         | 可选，为 spark 应用使用的 service account 添加额外注解       |
