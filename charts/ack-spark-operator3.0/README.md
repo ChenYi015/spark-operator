@@ -87,6 +87,7 @@ helm uninstall -n spark-operator ack-spark-operator3.0
 | `logLevel`                                  | int    | `2`                                                          | 日志级别，级别越高日志越详细                                 |
 | `podSecurityContext`                        | object | `{}`                                                         | Pod 安全上下文                                               |
 | `securityContext`                           | object | `{}`                                                         | Operator 容器安全上下文                                      |
+| `sidecars`                                  | list   | `[]`                                                         | Sidecar 容器                                                 |
 | `volumes`                                   | list   | `[]`                                                         | Operator 数据卷                                              |
 | `volumeMounts`                              | list   | `[]`                                                         | Operator 数据卷挂载                                          |
 | `webhook.enable`                            | bool   | `false`                                                      | 启用 webhook 服务器                                          |

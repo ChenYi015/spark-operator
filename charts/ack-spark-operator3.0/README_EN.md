@@ -87,6 +87,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `logLevel`                                  | int    | `2`                                                          | Set higher levels for more verbose logging                   |
 | `podSecurityContext`                        | object | `{}`                                                         | Pod security context                                         |
 | `securityContext`                           | object | `{}`                                                         | Operator container security context                          |
+| `sidecars`                                  | list   | `[]`                                                         | Sidecar containers                                           |
 | `volumes`                                   | list   | `[]`                                                         | Operator volumes                                             |
 | `volumeMounts`                              | list   | `[]`                                                         | Operator volume mounts                                       |
 | `webhook.enable`                            | bool   | `false`                                                      | Enable webhook server                                        |
