@@ -85,6 +85,7 @@ helm uninstall -n spark-operator ack-spark-operator3.0
 | `uiService.enable`                          | bool   | `true`                                                       | 是否为 Spark Web UI 创建 Service 资源                        |
 | `ingressUrlFormat`                          | string | `""`                                                         | Ingress URL 格式                                             |
 | `logLevel`                                  | int    | `2`                                                          | 日志级别，级别越高日志越详细                                 |
+| `envFrom`                                   | list   | `[]`                                                         | Pod 环境变量源                                               |
 | `podSecurityContext`                        | object | `{}`                                                         | Pod 安全上下文                                               |
 | `securityContext`                           | object | `{}`                                                         | Operator 容器安全上下文                                      |
 | `sidecars`                                  | list   | `[]`                                                         | Sidecar 容器                                                 |

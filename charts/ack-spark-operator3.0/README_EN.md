@@ -85,6 +85,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `uiService.enable`                          | bool   | `true`                                                       | Enable UI service creation for Spark application             |
 | `ingressUrlFormat`                          | string | `""`                                                         | Ingress URL format. Requires the UI service to be enabled by setting `uiService.enable` to true. |
 | `logLevel`                                  | int    | `2`                                                          | Set higher levels for more verbose logging                   |
+| `envFrom`                                   | list   | `[]`                                                         | Pod environment variable sources                             |
 | `podSecurityContext`                        | object | `{}`                                                         | Pod security context                                         |
 | `securityContext`                           | object | `{}`                                                         | Operator container security context                          |
 | `sidecars`                                  | list   | `[]`                                                         | Sidecar containers                                           |
