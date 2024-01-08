@@ -73,4 +73,3 @@ Create the name of the service account to be used by spark apps
     {{ default "default" .Values.serviceAccounts.spark.name }}
 {{- end -}}
 {{- end -}}
-

@@ -1,0 +1,14 @@
+# CHANGELOG
+
+## 1.1
+
+### 1.1.26
+
+- 同步社区版 [spark-on-k8s-operator](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) v1.1.26
+
+### 1.1.27
+
+- 更新 webhook init job 和 cleanup job 的模版，解决不启用 webhook 但配置了 `tolerations` 和 `nodeSelector` 字段时部署失败的问题
+- 增加 `nameOverride` 和 `fullnameOverride` 配置项，并为 `fullnameOverride` 字段提供默认参数 `ack-spark-operator3` 以解决 webhook Service 名称中包含 `.` 从而导致部署失败的问题
+- 更新开启高可用时需要的 RBAC 权限
+- 新增中文 README 文档
