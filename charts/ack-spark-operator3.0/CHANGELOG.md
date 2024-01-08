@@ -12,3 +12,11 @@
 - 增加 `nameOverride` 和 `fullnameOverride` 配置项，并为 `fullnameOverride` 字段提供默认参数 `ack-spark-operator3` 以解决 webhook Service 名称中包含 `.` 从而导致部署失败的问题
 - 更新开启高可用时需要的 RBAC 权限
 - 新增中文 README 文档
+
+### 1.1.28
+
+- 支持为 webhook 初始化和清理作业 pod 添加额外标签
+- Spark master URL 支持 IPv6（Spark 从 v3.4 开始支持 IPv6）
+- SparkApplication CRD 新增 `seccompProfile` 字段， 参见 https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+- 支持为 RBAC 资源添加额外注解信息
+- 修复 [SparkApplication with volcano scheduler not working on OCP #1723](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1723)

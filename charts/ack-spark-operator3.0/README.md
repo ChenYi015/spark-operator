@@ -126,3 +126,4 @@ helm uninstall -n spark-operator ack-spark-operator3.0
 | --------- | -------------- | ------------------------------------------------------------ |
 | `v1.1.26` | 2023年03月14日 | （1）新增 ack-spark-operator3.0  chart                       |
 | `v1.1.27` | 2024年01月04日 | （1）更新 webhook init 和 cleanup job 模版（2）新增配置项 `nameOverride` 和 `fullnameOverride` （3）更新开启高可用时需要的 RBAC 权限（4）新增中文 README 文档 |
+| `v1.1.28` | 2024年01月08日 | （1）支持为 webhook 初始化和清理作业 pod 添加额外标签<br/>（2）Spark master URL 支持 IPv6（Spark 从 v3.4 开始支持 IPv6）<br/>（3）SparkApplication CRD 新增 `seccompProfile` 字段， 参见 https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted<br/>（4）支持为 RBAC 资源添加额外注解信息<br/>（5）修复 [SparkApplication with volcano scheduler not working on OCP #1723](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1723) |
