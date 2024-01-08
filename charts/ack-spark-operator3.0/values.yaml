@@ -11,11 +11,11 @@ replicaCount: 1
 
 image:
   # -- Image repository
-  repository: registry-vpc.__ACK_REGION_ID__.aliyuncs.com/acs/spark-operator
+  repository: registry-__ACK_REGION_ID__-vpc.ack.aliyuncs.com/acs/spark-operator
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- if set, override the image tag whose default is the chart appVersion.
-  tag: v1beta2-1.3.8-3.1.1
+  tag: v1beta2-1.3.9-3.1.1-4a98d5a-aliyun
 
 # -- Image pull secrets
 imagePullSecrets: []
@@ -159,12 +159,12 @@ podLabels: {}
 # Kubernetes may kill these Java processes at will to enforce resource limits. When that happens, you will see the following error:
 # 'failed to run spark-submit for SparkApplication [...]: signal: killed' - when this happens, you may want to increase memory limits.
 resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 300Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 300Mi
+# limits:
+#   cpu: 100m
+#   memory: 300Mi
+# requests:
+#   cpu: 100m
+#   memory: 300Mi
 
 batchScheduler:
   # -- Enable batch scheduler for spark jobs scheduling. If enabled, users can specify batch scheduler name in spark application

@@ -20,3 +20,4 @@
 - SparkApplication CRD 新增 `seccompProfile` 字段， 参见 https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 - 支持为 RBAC 资源添加额外注解信息
 - 修复 [SparkApplication with volcano scheduler not working on OCP #1723](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1723)
+- 镜像仓库迁移至 ACR EE
