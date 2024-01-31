@@ -1,0 +1,16 @@
+apiVersion: v2
+name: ack-spark-operator
+description: A Helm chart for Spark on Kubernetes operator
+version: 1.1.28
+appVersion: 2.4.6
+kubeVersion: '>=1.14.0-0'
+keywords:
+- spark
+- namespace:spark-operator
+- releaseName:ack-spark-operator
+- category:data
+- arch:amd64
+home: https://github.com/AliyunContainerService/spark-on-k8s-operator
+maintainers:
+- name: 听泉
+  email: tingquan.cy@alibaba-inc.com

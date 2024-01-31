@@ -1,0 +1,90 @@
+# Default values for ack-spark-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# ACK
+region: __ACK_REGION_ID__
+
+# Operator version
+version: v2.4.5-v1beta2
+
+image:
+  # If not specified, ACK image registry will be used.
+  registry: ""
+  # Specifies whether to pull image by VPC network when use ACK image registry
+  pullByVPC: true
+  # Image repository
+  repository: acs/spark-operator
+  # Image tag
+  tag: ack-2.4.5-ce32621
+  # Image pull policy
+  pullPolicy: IfNotPresent
+  # Image pull secrets
+  pullSecrets: []
+
+sparkoperator:
+  serviceAccount:
+    # Specifies whether a ServiceAccount should be created for spark operator
+    create: true
+    # Specifies the name of ServiceAccount to be used by spark operator
+    name: "ack-spark-operator"
+  rbac:
+    # Specifies whether RBAC resources should be created for spark operator
+    create: true
+
+spark:
+  # Specifies whether to run spark applications within another namespace rather than operator's namespace
+  jobNamespace: "default"
+  serviceAccount:
+    # Specifies whether a ServiceAccount should be created for spark
+    create: true
+    # Specifies the name of ServiceAccount to be used by spark
+    name: "spark"
+  rbac:
+    # Specifies whether RBAC resources should be created for spark
+    create: true
+
+webhook:
+  # Specifies whether to enable webhook server
+  enable: true
+  # Webhook service port
+  port: 8080
+
+metrics:
+  # Specifies whether to enable prometheus metric scraping
+  enable: true
+  # Metrics port
+  port: 10254
+  # Metrics port name
+  portName: metrics
+  # Metrics serving endpoint
+  endpoint: /metrics
+  # Metric prefix, will be added to all exported metrics
+  prefix: ""
+
+# Set higher levels for more verbose logging
+logLevel: 2
+
+# Operator concurrency, higher values might increase memory usage
+controllerThreads: 10
+
+# Operator resync interval. Note that the operator will respond to events (e.g. create, update)
+# unrelated to this setting
+resyncInterval: 30
+
+# Ingress URL format.
+# Requires the UI service to be enabled by setting `uiService.enable` to true.
+ingressUrlFormat: ""
+
+# Node labels for pod assignment
+nodeSelector: {}
+
+# List of node taints to tolerate
+tolerations: []
+
+# Specified whether to enable Alibaba cloud feature gates
+enableAlibabaCloudFeatureGates: false
+
+# Specifies which feature gates to be enabled
+# default: SparkConfNodeName=true,SparkConfToleration=true,HideSparkConfEnv=false
+alibabaCloudFeatureGates: ""

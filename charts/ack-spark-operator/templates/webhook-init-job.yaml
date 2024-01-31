@@ -1,0 +1,43 @@
+{{- if .Values.webhook.enable }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "spark-operator.fullname" . }}-webhook-init
+  labels:
+    {{- include "spark-operator.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "spark-operator.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: main
+        image: {{ include "spark-operator.imageName" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - /usr/bin/gencerts.sh
+        - -n
+        - {{ .Release.Namespace }}
+        - -s
+        - {{ include "spark-operator.fullname" . }}-webhook
+        - -p
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end}}
+      restartPolicy: Never
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "spark-operator.serviceAccountName" . }}
+  backoffLimit: 3
+{{- end }}

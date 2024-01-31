@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "spark-operator.fullname" . }}
+  labels:
+    {{- include "spark-operator.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "spark-operator.name" . }}
+      app.kubernetes.io/version: {{ .Values.version }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "spark-operator.name" . }}
+        app.kubernetes.io/version: {{ .Values.version }}
+      {{- if .Values.metrics.enable }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.metrics.port }}"
+        prometheus.io/path: {{ .Values.metrics.endpoint }}
+      {{- end }}
+    spec:
+      containers:
+      - name: spark-operator
+        image: {{ include "spark-operator.imageName" . }}
+        {{- if .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- end }}
+        {{- if .Values.webhook.enable }}
+        volumeMounts:
+        - name: webhook-certs
+          mountPath: /etc/webhook-certs
+        {{- end }}
+        ports:
+        {{- if .Values.webhook.enable }}
+        - containerPort: {{ .Values.webhook.port }}
+        {{- end }}
+        {{- if .Values.metrics.enable }}
+        - containerPort: {{ .Values.metrics.port }}
+        {{- end }}
+        args:
+        - -v={{ default 2 .Values.logLevel }}
+        - -logtostderr
+        {{- if .Values.spark.jobNamespace }}
+        - -namespace={{ .Values.spark.jobNamespace }}
+        {{- end }}
+        {{- if .Values.ingressUrlFormat }}
+        - -ingress-url-format={{ .Values.ingressUrlFormat }}
+        {{- end }}
+        {{- if .Values.webhook.enable }}
+        - -enable-webhook=true
+        - -webhook-config-name={{ include "spark-operator.webhookName" . }}
+        - -webhook-svc-name={{ include "spark-operator.webhookName" . }}
+        - -webhook-svc-namespace={{ .Release.Namespace }}
+        - -webhook-port={{ .Values.webhook.port }}
+        {{- end }}
+        {{- if .Values.metrics.enable }}
+        - -enable-metrics=true
+        - -metrics-labels=app_type
+        {{- end }}
+        {{- if .Values.enableAlibabaCloudFeatureGates }}
+        - -enable-alibaba-cloud-feature-gates=true
+        - -alibaba-cloud-feature-gates={{ .Values.alibabaCloudFeatureGates }}
+        {{- end }}
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webhook.enable }}
+      volumes:
+      - name: webhook-certs
+        secret:
+          secretName: spark-webhook-certs
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "spark-operator.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
