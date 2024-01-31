@@ -325,6 +325,41 @@ func TestSyncSparkApplication_SubmissionFailed(t *testing.T) {
 	assert.Equal(t, int32(2), updatedApp.Status.SubmissionAttempts)
 }
 
+func TestShouldSuspend(t *testing.T) {
+
+	apps := []*v1beta2.SparkApplication{
+		{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "foo",
+				Namespace: "default",
+			},
+		},
+		{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "foo",
+				Namespace: "default",
+				Annotations: map[string]string{
+					"scheduling.x-k8s.io/suspend": "true",
+				},
+			},
+		},
+		{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "foo",
+				Namespace: "default",
+				Annotations: map[string]string{
+					"scheduling.x-k8s.io/suspend": "false",
+				},
+			},
+		},
+	}
+
+	expected := []bool{false, true, false}
+	for i, app := range apps {
+		assert.Equal(t, shouldSuspend(app), expected[i])
+	}
+}
+
 func TestValidateDetectsNodeSelectorSuccessNoSelector(t *testing.T) {
 	ctrl, _ := newFakeController(nil)
 
