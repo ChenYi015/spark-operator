@@ -36,7 +36,7 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	typedcorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
-	"k8s.io/client-go/listers/core/v1"
+	v1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/retry"
@@ -44,7 +44,7 @@ import (
 
 	"github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/apis/sparkoperator.k8s.io/v1beta2"
 	"github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/batchscheduler"
-	"github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/batchscheduler/interface"
+	schedulerinterface "github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/batchscheduler/interface"
 	crdclientset "github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/client/clientset/versioned"
 	crdscheme "github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/client/clientset/versioned/scheme"
 	crdinformers "github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/client/informers/externalversions"
@@ -620,41 +620,41 @@ func shouldRetry(app *v1beta2.SparkApplication) bool {
 }
 
 // State Machine for SparkApplication:
-//+--------------------------------------------------------------------------------------------------------------------+
-//|        +---------------------------------------------------------------------------------------------+             |
-//|        |       +----------+                                                                          |             |
-//|        |       |          |                                                                          |             |
-//|        |       |          |                                                                          |             |
-//|        |       |Submission|                                                                          |             |
-//|        |  +---->  Failed  +----+------------------------------------------------------------------+  |             |
-//|        |  |    |          |    |                                                                  |  |             |
-//|        |  |    |          |    |                                                                  |  |             |
-//|        |  |    +----^-----+    |  +-----------------------------------------+                     |  |             |
-//|        |  |         |          |  |                                         |                     |  |             |
-//|        |  |         |          |  |                                         |                     |  |             |
-//|      +-+--+----+    |    +-----v--+-+          +----------+           +-----v-----+          +----v--v--+          |
-//|      |         |    |    |          |          |          |           |           |          |          |          |
-//|      |         |    |    |          |          |          |           |           |          |          |          |
-//|      |   New   +---------> Submitted+----------> Running  +----------->  Failing  +---------->  Failed  |          |
-//|      |         |    |    |          |          |          |           |           |          |          |          |
-//|      |         |    |    |          |          |          |           |           |          |          |          |
-//|      |         |    |    |          |          |          |           |           |          |          |          |
-//|      +---------+    |    +----^-----+          +-----+----+           +-----+-----+          +----------+          |
-//|                     |         |                      |                      |                                      |
-//|                     |         |                      |                      |                                      |
-//|    +------------+   |         |             +-------------------------------+                                      |
-//|    |            |   |   +-----+-----+       |        |                +-----------+          +----------+          |
-//|    |            |   |   |  Pending  |       |        |                |           |          |          |          |
-//|    |            |   +---+   Rerun   <-------+        +---------------->Succeeding +---------->Completed |          |
-//|    |Invalidating|       |           <-------+                         |           |          |          |          |
-//|    |            +------->           |       |                         |           |          |          |          |
-//|    |            |       |           |       |                         |           |          |          |          |
-//|    |            |       +-----------+       |                         +-----+-----+          +----------+          |
-//|    +------------+                           |                               |                                      |
-//|                                             |                               |                                      |
-//|                                             +-------------------------------+                                      |
-//|                                                                                                                    |
-//+--------------------------------------------------------------------------------------------------------------------+
+// +--------------------------------------------------------------------------------------------------------------------+
+// |        +---------------------------------------------------------------------------------------------+             |
+// |        |       +----------+                                                                          |             |
+// |        |       |          |                                                                          |             |
+// |        |       |          |                                                                          |             |
+// |        |       |Submission|                                                                          |             |
+// |        |  +---->  Failed  +----+------------------------------------------------------------------+  |             |
+// |        |  |    |          |    |                                                                  |  |             |
+// |        |  |    |          |    |                                                                  |  |             |
+// |        |  |    +----^-----+    |  +-----------------------------------------+                     |  |             |
+// |        |  |         |          |  |                                         |                     |  |             |
+// |        |  |         |          |  |                                         |                     |  |             |
+// |      +-+--+----+    |    +-----v--+-+          +----------+           +-----v-----+          +----v--v--+          |
+// |      |         |    |    |          |          |          |           |           |          |          |          |
+// |      |         |    |    |          |          |          |           |           |          |          |          |
+// |      |   New   +---------> Submitted+----------> Running  +----------->  Failing  +---------->  Failed  |          |
+// |      |         |    |    |          |          |          |           |           |          |          |          |
+// |      |         |    |    |          |          |          |           |           |          |          |          |
+// |      |         |    |    |          |          |          |           |           |          |          |          |
+// |      +---------+    |    +----^-----+          +-----+----+           +-----+-----+          +----------+          |
+// |                     |         |                      |                      |                                      |
+// |                     |         |                      |                      |                                      |
+// |    +------------+   |         |             +-------------------------------+                                      |
+// |    |            |   |   +-----+-----+       |        |                +-----------+          +----------+          |
+// |    |            |   |   |  Pending  |       |        |                |           |          |          |          |
+// |    |            |   +---+   Rerun   <-------+        +---------------->Succeeding +---------->Completed |          |
+// |    |Invalidating|       |           <-------+                         |           |          |          |          |
+// |    |            +------->           |       |                         |           |          |          |          |
+// |    |            |       |           |       |                         |           |          |          |          |
+// |    |            |       +-----------+       |                         +-----+-----+          +----------+          |
+// |    +------------+                           |                               |                                      |
+// |                                             |                               |                                      |
+// |                                             +-------------------------------+                                      |
+// |                                                                                                                    |
+// +--------------------------------------------------------------------------------------------------------------------+
 func (c *Controller) syncSparkApplication(key string) error {
 	namespace, name, err := cache.SplitMetaNamespaceKey(key)
 	if err != nil {
@@ -693,6 +693,8 @@ func (c *Controller) syncSparkApplication(key string) error {
 		if err := c.validateSparkApplication(appCopy); err != nil {
 			appCopy.Status.AppState.State = v1beta2.FailedState
 			appCopy.Status.AppState.ErrorMessage = err.Error()
+		} else if shouldSuspend(app) {
+			// Nothing happens
 		} else {
 			appCopy = c.submitSparkApplication(appCopy)
 		}
@@ -805,6 +807,14 @@ func (c *Controller) syncSparkApplication(key string) error {
 	}
 
 	return nil
+}
+
+func shouldSuspend(app *v1beta2.SparkApplication) bool {
+	if s, exists := app.Annotations["scheduling.x-k8s.io/suspend"]; !exists {
+		return false
+	} else {
+		return s == "true"
+	}
 }
 
 func (c *Controller) completedCRDAchieved(appToUpdate *v1beta2.SparkApplication) bool {
