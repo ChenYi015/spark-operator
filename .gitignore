@@ -12,3 +12,6 @@ sparkctl/sparkctl-darwin-amd64
 
 # Mac OS
 .DS_Store
+
+# Helm
+/values.yaml
