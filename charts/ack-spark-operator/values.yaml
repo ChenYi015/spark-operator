@@ -16,7 +16,7 @@ image:
   # Image repository
   repository: acs/spark-operator
   # Image tag
-  tag: ack-2.4.5-ce32621
+  tag: v1beta2-1.1.0-2.4.5-5b2cfda-aliyun
   # Image pull policy
   pullPolicy: IfNotPresent
   # Image pull secrets

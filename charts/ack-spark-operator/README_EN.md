@@ -153,3 +153,4 @@ The following table lists the configurable parameters of the Spark operator char
 | `v0.1.17`                       |   Dec 14 ,2022                | (1) Add new parameter `ingress-url-format` |
 | `v0.1.18`                       | Jan 3, 2024 |   (1) Narrow RBAC rules (2) Update templates and parameters (3) Add Chinese README |
 | `v1.1.28` | Jan 8, 2024 | The same with `v0.1.18`, override the old `v1.1.28` release  |
+| `v1.1.29` | Feb 1, 2024  | (1) Support adding `scheduling.x-k8s.io/suspend: "true"` annotation in SparkApplication to implement suspend operation, thereby allowing kube-queue to perform queuing processing |
