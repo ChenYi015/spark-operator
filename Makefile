@@ -50,7 +50,8 @@ template:
 	helm template $(RELEASE) charts/ack-spark-operator \
 		--namespace $(NAMESPACE) \
 		--dry-run \
-		--debug
+		--debug \
+		--values values.yaml
 
 install:
 	helm install $(RELEASE) charts/ack-spark-operator \

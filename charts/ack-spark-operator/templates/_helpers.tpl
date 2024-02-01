@@ -72,9 +72,9 @@ Create the name of the image to be used by spark operator
 {{- if .Values.image.registry -}}
 {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository .Values.image.tag }}
 {{- else if .Values.image.pullByVPC -}}
-{{ printf "registry-vpc.%s.aliyuncs.com/%s:%s" .Values.region .Values.image.repository .Values.image.tag }}
+{{ printf "registry-%s-vpc.ack.aliyuncs.com/%s:%s" .Values.region .Values.image.repository .Values.image.tag }}
 {{- else -}}
-{{ printf "registry.%s.aliyuncs.com/%s:%s" .Values.region .Values.image.repository .Values.image.tag }}
+{{ printf "registry-%s.ack.aliyuncs.com/%s:%s" .Values.region .Values.image.repository .Values.image.tag }}
 {{- end -}}
 {{- end -}}
 

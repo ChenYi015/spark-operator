@@ -1,4 +1,4 @@
-{{- if .Values.sparkoperator.rbac.create }}
+{{- if .Values.sparkoperator.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -21,6 +21,7 @@ rules:
 - apiGroups: ["scheduling.volcano.sh"]
   resources: ["podgroups", "queues", "queues/status"]
   verbs: ["create", "get", "list", "watch", "update", "delete"]
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -64,53 +65,4 @@ roleRef:
   kind: Role
   name: {{ include "spark-operator.fullname" . }}
   apiGroup: rbac.authorization.k8s.io
-{{ if .Values.spark.jobNamespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: {{ include "spark-operator.fullname" . }}
-  namespace: {{ .Values.spark.jobNamespace }}
-  labels:
-    {{- include "spark-operator.labels" . | nindent 4}}
-rules:
-- apiGroups: [""]
-  resources: ["pods"]
-  verbs: ["*"]
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["*"]
-- apiGroups: [""]
-  resources: ["services"]
-  verbs: ["create", "get", "delete"]
-- apiGroups: [""]
-  resources: ["persistentvolumeclaims"]
-  verbs: ["create", "get", "list", "watch", "update", "patch"]
-- apiGroups: [""]
-  resources: ["events"]
-  verbs: ["create", "update", "patch"]
-- apiGroups: [""]
-  resources: ["resourcequotas"]
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["extensions"]
-  resources: ["ingresses"]
-  verbs: ["create", "get", "delete"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: {{ include "spark-operator.fullname" . }}
-  namespace: {{ .Values.spark.jobNamespace }}
-  labels:
-    {{- include "spark-operator.labels" . | nindent 4 }}
-subjects:
-- kind: ServiceAccount
-  name: {{ include "spark-operator.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: Role
-  name: {{ include "spark-operator.fullname" . }}
-  apiGroup: rbac.authorization.k8s.io
-{{- end }}
-{{- end }}
+{{- end -}}
