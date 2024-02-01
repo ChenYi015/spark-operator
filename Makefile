@@ -40,3 +40,29 @@ build-api-docs:
 	-api-dir github.com/GoogleCloudPlatform/spark-on-k8s-operator/pkg/apis/sparkoperator.k8s.io/v1beta2 \
 	-template-dir hack/api-docs-template \
 	-out-file docs/api-docs.md
+
+RELEASE ?= ack-spark-operator
+NAMESPACE ?= spark-operator
+
+.PHONY: template install upgrade uninstall
+
+template:
+	helm template $(RELEASE) charts/ack-spark-operator \
+		--namespace $(NAMESPACE) \
+		--dry-run \
+		--debug
+
+install:
+	helm install $(RELEASE) charts/ack-spark-operator \
+		--create-namespace \
+		--namespace $(NAMESPACE) \
+		--values values.yaml
+
+upgrade:
+	helm upgrade $(RELEASE) charts/ack-spark-operator \
+		--namespace $(NAMESPACE) \
+		--values values.yaml
+
+uninstall:
+	helm uninstall $(RELEASE) \
+		--namespace $(NAMESPACE)

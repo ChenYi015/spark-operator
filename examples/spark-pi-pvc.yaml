@@ -1,58 +1,67 @@
-#
-# Copyright 2017 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: test-pv
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /tmp
+    type: Directory
 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+
+---
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
-  name: spark-pi
+  name: spark-pi-pvc
   namespace: default
 spec:
   type: Scala
   mode: cluster
-  image: "registry.ap-southeast-1.aliyuncs.com/acs/spark:ack-2.4.5-4534784-test"
+  image: registry.aliyuncs.com/acs/spark:ack-2.4.5-latest
   imagePullPolicy: Always
   mainClass: org.apache.spark.examples.SparkPi
-  mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.11-2.4.5.jar"
+  mainApplicationFile: local:///opt/spark/examples/jars/spark-examples_2.11-2.4.5.jar
   sparkVersion: "2.4.5"
   restartPolicy:
     type: Never
+  volumes:
+  - name: test-volume
+    persistentVolumeClaim:
+      claimName: test-pvc
   driver:
     cores: 1
     coreLimit: "1200m"
     memory: "512m"
     labels:
-      version: 2.4.5
+      version: "2.4.5"
     serviceAccount: spark
     volumeMounts:
-      - name: "www"
-        mountPath: "/tmp"
+    - name: test-volume
+      mountPath: /tmp
   executor:
     cores: 1
     instances: 1
     memory: "512m"
     labels:
-      version: 2.4.5
+      version: "2.4.5"
     volumeMounts:
-      - name: "www"
-        mountPath: "/tmp"
-  volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "alicloud-disk-essd"
-      resources:
-        requests:
-          storage: 100Gi
+    - name: test-volume
+      mountPath: /tmp

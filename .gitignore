@@ -1,10 +1,17 @@
-.vscode/
 vendor/
 spark-operator
-.idea/
-**/*.iml
 sparkctl/sparkctl
 spark-on-k8s-operator
 sparkctl/sparkctl-linux-amd64
 sparkctl/sparkctl-darwin-amd64
+
+# Helm
+/values.yaml
+
+# Various IDEs
+.vscode/
+.idea/
+**/*.iml
+
+# Mac OS
 .DS_Store
