@@ -15,7 +15,7 @@ image:
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- if set, override the image tag whose default is the chart appVersion.
-  tag: v1beta2-1.3.9-3.1.1-4a98d5a-aliyun
+  tag: v1beta2-1.3.9-3.1.1-90c2a80-aliyun
 
 # -- Image pull secrets
 imagePullSecrets: []

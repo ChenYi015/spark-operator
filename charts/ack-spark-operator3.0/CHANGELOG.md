@@ -21,3 +21,7 @@
 - 支持为 RBAC 资源添加额外注解信息
 - 修复 [SparkApplication with volcano scheduler not working on OCP #1723](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1723)
 - 镜像仓库迁移至 ACR EE
+
+### 1.1.29
+
+- 支持在 SparkApplication 中添加 `scheduling.x-k8s.io/suspend: "true"` 注解实现 suspend 操作，从而允许 kube-queue 进行排队处理
