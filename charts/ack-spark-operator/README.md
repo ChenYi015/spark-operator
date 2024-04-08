@@ -198,3 +198,4 @@ helm install ack-spark-operator aliyunhub/ack-spark-operator \
 | `v0.1.18` | 2024年01月02日 | （1）RBAC 权限收敛（2）更新模版和配置参数（3）增加中文 README |
 | `v1.1.28` | 2024年01月08日 | 变更同 `v0.1.18`, 覆盖旧的 `v1.1.28` 版本 |
 | `v1.1.29` | 2024年02月01日 | （1）支持在 SparkApplication 中添加 `scheduling.x-k8s.io/suspend: "true"` 注解实现 suspend 操作，从而允许 kube-queue 进行排队处理 |
+| `v1.1.30` | 2024年04月08日 | 修复 RBAC 权限导致作业提交失败的问题 |
