@@ -17,7 +17,7 @@
 
 - 支持为 webhook 初始化和清理作业 pod 添加额外标签
 - Spark master URL 支持 IPv6（Spark 从 v3.4 开始支持 IPv6）
-- SparkApplication CRD 新增 `seccompProfile` 字段， 参见 https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+- SparkApplication CRD 新增 `seccompProfile` 字段， 参见 <https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted>
 - 支持为 RBAC 资源添加额外注解信息
 - 修复 [SparkApplication with volcano scheduler not working on OCP #1723](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/issues/1723)
 - 镜像仓库迁移至 ACR EE
@@ -25,3 +25,7 @@
 ### 1.1.29
 
 - 支持在 SparkApplication 中添加 `scheduling.x-k8s.io/suspend: "true"` 注解实现 suspend 操作，从而允许 kube-queue 进行排队处理
+
+### 1.1.30
+
+- 更新基础镜像，修复已知 CVE 漏洞
