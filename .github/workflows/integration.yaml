@@ -1,13 +1,19 @@
-name: Pre-commit checks
+name: Integration Test
 
 on:
   pull_request:
     branches:
       - master
+      - release-*
 
   push:
     branches:
       - master
+      - release-*
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.actor }}
+  cancel-in-progress: true
 
 jobs:
   build-api-docs:
@@ -15,8 +21,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
 
       - name: The API documentation hasn't changed
         run: |
@@ -32,36 +36,31 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version-file: go.mod
 
       - name: build sparkctl
-        run: |
-          make all
+        run: make build-sparkctl
 
   build-spark-operator:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version-file: go.mod
 
-      - name: Run gofmt check
+      - name: Run go fmt check
         run: make fmt-check
 
-      - name: Run static analysis
-        run: make static-analysis
+      - name: Run go vet check
+        run: make go-vet
 
       - name: Run unit tests
         run: make unit-test
@@ -90,8 +89,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: "0"
 
       - name: Install Helm
         uses: azure/setup-helm@v4
@@ -118,9 +115,9 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed)
+          changed=$(ct list-changed --target-branch ${{ github.ref }})
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Detect CRDs drift between chart and manifest

@@ -10,6 +10,10 @@ REPO=github.com/kubeflow/spark-operator
 
 all: clean-sparkctl build-sparkctl install-sparkctl
 
+.PHONY: build-operator
+build-operator: ## Build Spark operator
+	go build -o bin/spark-operator main.go
+
 build-sparkctl:
 	[ ! -f "sparkctl/sparkctl-darwin-amd64" ] || [ ! -f "sparkctl/sparkctl-linux-amd64" ] && \
 	echo building using $(BUILDER) && \
@@ -71,16 +75,16 @@ clean:
 	go clean -cache -testcache -r -x 2>&1 >/dev/null
 	-rm -rf _output
 
-unit-test: clean
-	@echo "running unit tests"
-	go test -v ./... -covermode=atomic
+.PHONY: unit-test
+unit-test: clean ## Run unit tests.
+	@echo "Running unit tests..."
+	go test $(shell go list ./... | grep -v /e2e) -coverprofile cover.out
 
 integration-test: clean
 	@echo "running integration tests"
 	go test -v ./test/e2e/ --kubeconfig "$(HOME)/.kube/config" --operator-image=gcr.io/spark-operator/spark-operator:local
 
-static-analysis:
-	@echo "running go vet"
-	# echo "Building using $(BUILDER)"
-	# go vet ./...
-	go vet $(REPO)...
+.PHONY: go-vet
+go-vet: ## Run go vet against code.
+	@echo "Running go vet..."
+	go vet ./...
