@@ -14,9 +14,9 @@ concurrency:
 env:
   SEMVER_PATTERN: '^v([0-9]+)\.([0-9]+)\.([0-9]+)(-rc\.([0-9]+))?$'
   IMAGE_REGISTRY: docker.io
-  IMAGE_REPOSITORY: kubeflow/spark-operator
+  IMAGE_REPOSITORY: chenyi015/spark-operator
   HELM_REGISTRY: ghcr.io
-  HELM_REPOSITORY: ${{ github.repository_owner }}/helm-charts
+  HELM_REPOSITORY: chenyi015/helm-charts
 
 jobs:
   check-release:
