@@ -11,7 +11,7 @@ concurrency:
 
 env:
   HELM_REGISTRY: ghcr.io
-  HELM_REPOSITORY: ${{ github.repository_owner }}/helm-charts
+  HELM_REPOSITORY: chenyi015/helm-charts
 
 jobs:
   release_helm_charts:
