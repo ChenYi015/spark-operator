@@ -19,11 +19,11 @@ GIT_COMMIT := $(shell git rev-parse HEAD)
 GIT_TAG := $(shell if [ -z "`git status --porcelain`" ]; then git describe --exact-match --tags HEAD 2>/dev/null; fi)
 GIT_TREE_STATE := $(shell if [ -z "`git status --porcelain`" ]; then echo "clean" ; else echo "dirty"; fi)
 GIT_SHA := $(shell git rev-parse --short HEAD || echo "HEAD")
-GIT_VERSION := ${VERSION}+${GIT_SHA}
+GIT_VERSION := ${VERSION}-ack
 
 REPO := github.com/kubeflow/spark-operator
 SPARK_OPERATOR_GOPATH := /go/src/github.com/kubeflow/spark-operator
-SPARK_OPERATOR_CHART_PATH := charts/spark-operator-chart
+SPARK_OPERATOR_CHART_PATH := charts/ack-spark-operator
 DEP_VERSION := `grep DEP_VERSION= Dockerfile | awk -F\" '{print $$2}'`
 BUILDER := `grep "FROM golang:" Dockerfile | awk '{print $$2}'`
 UNAME := `uname | tr '[:upper:]' '[:lower:]'`
@@ -37,7 +37,7 @@ CONTAINER_TOOL ?= docker
 # Image URL to use all building/pushing image targets
 IMAGE_REGISTRY ?= docker.io
 IMAGE_REPOSITORY ?= kubeflow/spark-operator
-IMAGE_TAG ?= $(VERSION)
+IMAGE_TAG ?= $(GIT_VERSION)
 IMAGE ?= $(IMAGE_REGISTRY)/$(IMAGE_REPOSITORY):$(IMAGE_TAG)
 
 # Kind cluster
@@ -238,7 +238,8 @@ helm-lint: ## Run Helm chart lint test.
 
 .PHONY: helm-docs
 helm-docs: helm-docs-plugin ## Generates markdown documentation for helm charts from requirements and values files.
-	$(HELM_DOCS) --sort-values-order=file
+	$(HELM_DOCS) --chart-search-root=charts --chart-to-generate=charts/ack-spark-operator --template-files=README.md.gotmpl --values-file values.yaml --sort-values-order=file --output-file=README.md
+	$(HELM_DOCS) --chart-search-root=charts --chart-to-generate=charts/ack-spark-operator --template-files=README-zh_CN.md.gotmpl --values-file values-zh_CN.yaml --sort-values-order=file --output-file=README-zh_CN.md
 
 ##@ Deployment
 
