@@ -14,9 +14,9 @@
 # limitations under the License.
 #
 
-ARG SPARK_IMAGE=spark:3.5.2
+ARG SPARK_IMAGE=registry-cn-hangzhou.ack.aliyuncs.com/dev/spark:3.5.2
 
-FROM golang:1.23.1 AS builder
+FROM registry-cn-hangzhou.ack.aliyuncs.com/dev/golang:1.23.1 AS builder
 
 WORKDIR /workspace
 
