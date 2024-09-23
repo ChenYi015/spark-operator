@@ -66,10 +66,10 @@ controller:
     # -- 指定是否为 Spark 作业启用 batch 调度功能。
     # 如果启用，用户可以在 Spark 作业中指定 batch 调度器名称。
     enable: false
-    # 指定 kube-scheduler 调度器名称列表。
+    # -- 指定 kube-scheduler 调度器名称列表。
     kubeSchedulerNames: []
     # - default-scheduler
-    # -- （可选）为 Spark 作业指定默认 batch 调度器名称，当提交 Spark 作业时，如果未指定 batch 调度器，则会使用该默认值。
+    # -- (可选）为 Spark 作业指定默认 batch 调度器名称，当提交 Spark 作业时，如果未指定 batch 调度器，则会使用该默认值。
     # 支持的值可以是 `volcano`、`yunikorn` 和注册的 kube-scheduler 名称，使用其他值将会导致控制器启动失败。
     default: ""
 

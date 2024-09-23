@@ -37,9 +37,9 @@ Install the chart with following steps:
 | nameOverride | string | `"spark-operator"` | String to partially override release name. |
 | fullnameOverride | string | `""` | String to fully override release name. |
 | commonLabels | object | `{}` | Common labels to add to the resources. |
-| image.registry | string | `"docker.io"` | Image registry. |
-| image.repository | string | `"kubeflow/spark-operator"` | Image repository. |
-| image.tag | string | If not set, the chart appVersion will be used. | Image tag. |
+| image.registry | string | `"registry-__ACK_REGION_ID__-vpc.ack.aliyuncs.com"` | Image registry. |
+| image.repository | string | `"acs/spark-operator"` | Image repository. |
+| image.tag | string | `"2.0.0-ack"` | Image tag. |
 | image.pullPolicy | string | `"IfNotPresent"` | Image pull policy. |
 | image.pullSecrets | list | `[]` | Image pull secrets for private image registry. |
 | controller.replicas | int | `1` | Number of replicas of controller. |
