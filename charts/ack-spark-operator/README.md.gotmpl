@@ -1,0 +1,60 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+This chart bootstraps a [Kubernetes Operator for Apache Spark]({{template "chart.homepage" . }}) deployment using the [Helm](https://helm.sh) package manager.
+
+{{ template "chart.homepageLine" . }}
+
+## Introduction
+
+Apache Spark is a fast and general-purpose computing engine specifically designed for large-scale data processing, and it has been widely applied in various big data processing scenarios across industries.
+
+The Spark Operator is specifically designed for running Spark workloads in Kubernetes clusters. It defines two custom resources and implements corresponding controllers, allowing users to submit one-time Spark jobs by writing a SparkApplication manifest file, or to submit scheduled Spark jobs by writing a ScheduledSparkApplication manifest file. Running Spark jobs with the Spark Operator has the following advantages:
+
+- Automated management of the lifecycle of Spark applications.
+- Support for certain Kubernetes features not implemented in Spark Core.
+
+## Prerequisites
+
+- [Kubernetes](https://kubernetes.io/) >= 1.24
+- [Helm](https://helm.sh) >= 3
+
+## Install
+
+Install the chart with following steps:
+
+1. Log in to the [Container Service Console](https://cs.console.aliyun.com/), and in the left navigation bar, select **Marketplace** > **Marketplace**.
+2. On the **Marketplace** page, search for **ack-spark-operator** and then click on the application.
+3. On the **Application Details** page, click on the **Deploy** button in the top right corner, and follow the on-screen instructions to proceed with the deployment.
+4. On the **Basic Information** page, after filling in the **Cluster**, **Namespace**, and **Release Name**, click on **Next**.
+5. On the **Parameter Configuration** page, select the Chart version, configure the parameters, and then click on **OK**.
+
+{{- define "chart.valuesHeader" }}
+## Configurations
+{{- end }}
+
+{{ template "chart.valuesSection" . }}
+
+{{- define "chart.maintainersTable" }}
+| Name | Email |
+| ---- | ------ |
+{{- range .Maintainers }}
+| {{ .Name }} | {{ if .Email }}<{{ .Email }}>{{ end }} |
+{{- end }}
+{{- end }}
+
+{{ template "chart.maintainersSection" . }}
+
+## Release Note
+
+| version | date | changes |
+| ------- | ---- | ------- |
+{{- $file := .Files.Get "CHANGELOG.yaml" | fromYaml }}
+{{- range $changelog := $file.changelogs }}
+| {{ $changelog.version }} | {{ $changelog.date }} | {{- range $index, $change := $changelog.changes }}
+{{- printf "（%d）%s<br>" ($index | add 1) $change }}
+{{- end }} |
+{{- end }}

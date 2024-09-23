@@ -1,0 +1,31 @@
+changelogs:
+  - version: 0.1.17
+    date: Dec 14 ,2022
+    changes:
+      - Add new parameter `ingress-url-format`
+  - version: 0.1.18
+    date: Jan 3, 2024
+    changes:
+      - Narrow RBAC rules
+      - Update templates and parameters
+      - Add Chinese README
+  - version: 1.1.28
+    date: Jan 8, 2024
+    changes:
+      - The same with `v0.1.18`, override the old `v1.1.28` release
+  - version: 1.1.29
+    date: Feb 1, 2024
+    changes:
+      - "Support adding `scheduling.x-k8s.io/suspend: \"true\"` annotation in SparkApplication to implement suspend operation, thereby allowing kube-queue to perform queuing processing"
+  - version: 1.1.30
+    date: Apr 8, 2024
+    changes:
+      - Update RBAC resources
+  - version: 1.1.31
+    date: June 31, 2024
+    changes:
+      - Fix: webhook nodeSelector did not match operator pod labels
+  - version: 2.0.0
+    date: Sep 23, 2024
+    changes:
+      - Sync [kubeflow/spark-operator](https://github.com/kubeflow/spark-operator) 2.0.0 version

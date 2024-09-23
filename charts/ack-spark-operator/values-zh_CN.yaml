@@ -1,0 +1,334 @@
+#
+# Copyright 2024 The Kubeflow authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Default values for spark-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- 部分覆盖发布名称的名字
+nameOverride: spark-operator
+
+# -- 完全覆盖发布名称的名字
+fullnameOverride: ""
+
+# -- 将会添加标签至所创建的资源
+commonLabels: {}
+
+image:
+  # -- 镜像仓库
+  registry: registry-__ACK_REGION_ID__-vpc.ack.aliyuncs.com
+  # -- 镜像名称
+  repository: acs/spark-operator
+  # -- 镜像标签
+  tag: 2.0.0-ack
+  # -- 镜像拉取策略
+  pullPolicy: IfNotPresent
+  # -- 镜像拉取秘钥
+  pullSecrets: []
+  # - name: <secret-name>
+
+controller:
+  # -- 控制器副本数量
+  replicas: 1
+
+  # -- 调谐并发度, 值越大内存消耗越高
+  workers: 10
+
+  # -- 日志级别，可以是 `debug`, `info`, `error`。
+  logLevel: info
+
+  uiService:
+    # -- 指定是否需要为 Spark web UI 创建 Service 资源。
+    enable: true
+
+  uiIngress:
+    # -- 指定是否需要为 Spark web UI 创建 Ingress 资源。
+    # `controller.uiService.enable` 必须设置为 `true` 以启用创建 ingress 功能。
+    enable: false
+    # -- Ingress URL 格式。
+    # 当 `controller.uiIngress.enable` 设置为 `true` 时必填.
+    urlFormat: ""
+
+  batchScheduler:
+    # -- 指定是否为 Spark 作业启用 batch 调度功能。
+    # 如果启用，用户可以在 Spark 作业中指定 batch 调度器名称。
+    enable: false
+    # 指定 kube-scheduler 调度器名称列表。
+    kubeSchedulerNames: []
+    # - default-scheduler
+    # -- （可选）为 Spark 作业指定默认 batch 调度器名称，当提交 Spark 作业时，如果未指定 batch 调度器，则会使用该默认值。
+    # 支持的值可以是 `volcano`、`yunikorn` 和注册的 kube-scheduler 名称，使用其他值将会导致控制器启动失败。
+    default: ""
+
+  serviceAccount:
+    # -- 是否为控制器创建服务账号
+    create: true
+    # -- (可选) 控制器使用的服务账号名称
+    name: ""
+    # -- 为控制器的服务账号指定额外注解。
+    annotations: {}
+
+  rbac:
+    # -- 是否为控制器创建 RBAC 资源。
+    create: true
+    # -- 为控制器的 RBAC 资源指定额外注解。
+    annotations: {}
+
+  # -- 控制器 pod 额外标签
+  labels: {}
+    # key1: value1
+    # key2: value2
+
+  # -- 控制器 pod 额外注解
+  annotations: {}
+    # key1: value1
+    # key2: value2
+
+  # -- 控制器 pod 额外数据卷
+  volumes: []
+
+  # -- 控制器 pod 节点选择器
+  nodeSelector: {}
+
+  # -- 控制器 pod 亲和性
+  affinity: {}
+
+  # -- 控制器 pod 污点容忍
+  tolerations: []
+
+  # -- 控制器 pod 优先级类
+  priorityClassName: ""
+
+  # -- 控制器 pod 安全上下文
+  podSecurityContext: {}
+    # runAsUser: 1000
+    # runAsGroup: 2000
+    # fsGroup: 3000
+
+  # -- 控制器 pod 拓扑分布约束
+  # 更多信息请参考: [Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/).
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  # - maxSkew: 1
+  #   topologyKey: kubernetes.io/hostname
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- 控制器容器环境变量
+  env: []
+
+  # -- 控制器容器环境变量源
+  envFrom: []
+
+  # -- 控制器容器数据卷挂载
+  volumeMounts: []
+
+  # -- 控制器容器资源需求
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 300Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 300Mi
+
+  # -- 控制器容器安全上下文
+  securityContext: {}
+    # runAsUser: 1000
+    # runAsGroup: 2000
+    # fsGroup: 3000
+
+  # -- Sidecar 容器
+  sidecars: []
+
+  # 为控制器指定 Pod disruption budget 以避免服务降级。
+  podDisruptionBudget:
+    # -- 指定是否为控制器创建 Pod disruption budget。
+    # 更多信息请参见: [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
+    enable: false
+    # -- 最小可用的 Pod 数量，需要 `controller.replicas` 大于 `1`。
+    minAvailable: 1
+
+  pprof:
+    # -- 是否启用 pprof
+    enable: false
+    # -- 指定 pprof 端口号
+    port: 6060
+    # -- 指定 pprof 端口号名称
+    portName: pprof
+
+webhook:
+  # -- 是否启用 webhook
+  enable: true
+
+  # -- Webhook 副本数量
+  replicas: 1
+
+  # -- Webhook 日志级别，可以是 `debug`、`info` 或 `error`。
+  logLevel: info
+
+  # -- Webhook 端口号
+  port: 9443
+
+  # -- Webhook 端口名称
+  portName: webhook
+
+  # -- Webhook 调用失败处理策略，支持的选项包括 `Ignore` 和 `Fail`。
+  failurePolicy: Fail
+
+  # -- 指定 Webhook 调用超时时间（单位：秒），值必须为 1 到 30 之间。
+  timeoutSeconds: 10
+
+  resourceQuotaEnforcement:
+    # -- 指定是否需要启用资源配额功能
+    enable: false
+
+  serviceAccount:
+    # -- 是否为 webhook 创建服务账号
+    create: true
+    # -- （可选）Webhook 服务账号名称
+    name: ""
+    # -- Webhook 服务账号额外注解
+    annotations: {}
+
+  rbac:
+    # -- 是否为 Webhook 创建 RBAC 资源。
+    create: true
+    # -- 为 Webhook 的 RBAC 资源指定额外注解。
+    annotations: {}
+
+  # -- Webhook pod 额外标签
+  labels: {}
+    # key1: value1
+    # key2: value2
+
+  # -- Webhook pod 额外注解
+  annotations: {}
+    # key1: value1
+    # key2: value2
+
+  # -- Webhook pod sidecar 容器
+  sidecars: []
+
+  # -- Webhook pod 额外数据卷
+  volumes: []
+
+  # -- Webhook pod 节点选择器
+  nodeSelector: {}
+
+  # -- Webhook pod 亲和性
+  affinity: {}
+
+  # -- Webhook pod 污点容忍
+  tolerations: []
+
+  # -- Webhook pod 优先级类
+  priorityClassName: ""
+
+  # -- Webhook pod 安全上下文
+  podSecurityContext: {}
+    # runAsUser: 1000
+    # runAsGroup: 2000
+    # fsGroup: 3000
+
+  # -- Webhook pod 拓扑分布约束
+  # 更多信息请参考: [Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/).
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  # - maxSkew: 1
+  #   topologyKey: kubernetes.io/hostname
+  #   whenUnsatisfiable: DoNotSchedule
+
+  # -- Webhook 容器环境变量
+  env: []
+
+  # -- Webhook 容器环境变量源
+  envFrom: []
+
+  # -- Webhook 容器数据卷挂载
+  volumeMounts: []
+
+  # -- Webhook 容器资源需求
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 300Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 300Mi
+
+  # -- Webhook 容器安全上下文
+  securityContext: {}
+    # runAsUser: 1000
+    # runAsGroup: 2000
+    # fsGroup: 3000
+
+  # 为 Webhook 配置 Pod disruption budget 以避免服务降级。
+  podDisruptionBudget:
+    # -- 是否为 Webhook 创建 Pod disruption budget，
+    # 更多信息请参见: [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
+    enable: false
+    # -- 最小可用的 Pod 副本数量，需要 `webhook.replicas` 大于 `1`。`
+    minAvailable: 1
+
+spark:
+  # -- 可以运行 spark 任务的命名空间列表，如果包含空字符串，则允许所有命名空间。
+  # 注意：需要确保命名空间已经存在。
+  jobNamespaces:
+  - default
+
+  serviceAccount:
+    # -- 是否为 Spark 创建服务账号
+    create: true
+    # -- （可选）Spark 服务账号名称
+    name: ""
+    # -- （可选）Spark 服务账号额外注解
+    annotations: {}
+
+  rbac:
+    # -- 指定是否为 Spark 创建 RBAC 资源
+    create: true
+    # -- （可选）为 Spark 的 RBAC 资源指定额外注解
+    annotations: {}
+
+prometheus:
+  metrics:
+    # -- 是否启用 Prometheus 监控指标抓取
+    enable: true
+    # -- Metric 端口号
+    port: 8080
+    # -- Metrics 端口名称
+    portName: metrics
+    # -- Metrics 服务端点
+    endpoint: /metrics
+    # -- Metrics 名称前缀，将会添加至所有导出的指标
+    prefix: ""
+
+  podMonitor:
+    # -- 是否创建 Pod monitor 资源，需要将 `prometheus.metrics.enable` 设置为 `true` 以启用 Prometheus。
+    create: false
+    # -- Pod monitor 标签
+    labels: {}
+    # -- The label to use to retrieve the job name from
+    # -- 从作业标签中检索出作业名称
+    jobLabel: spark-operator-podmonitor
+    # -- Prometheus 监控指标 endpoint 属性，`metrics.portName` 将被用作端口
+    podMetricsEndpoint:
+      scheme: http
+      interval: 5s

@@ -1,0 +1,63 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+一个用于在 ACK 集群中部署 Spark operator 的 Helm chart。
+
+{{ template "chart.homepageLine" . }}
+
+## 概述
+
+Apache Spark 是一种专门为大规模数据处理而设计的快速且通用的计算引擎，并已经广泛应用于各行各业的大数据处理场景中。
+Spark Operator 是专门为在 Kubernetes 集群中运行 Spark 工作负载而设计的 Operator，它定义了两种自定义资源并实现了相应的控制器，用户可以通过编写 `SparkApplication` 清单文件提交一次性 Spark 作业，或者通过编写 `ScheduledSparkApplication` 清单文件提交定时 Spark 作业。使用 Spark Operator 运行 Spark 作业有如下优势：
+
+- 自动化管理 Spark 作业的生命周期。
+- 支持部分在 Spark Core 中没有实现的 Kubernetes 特性。
+
+## 先决条件
+
+- [Kubernetes](https://kubernetes.io/) >= 1.24
+- [Helm](https://helm.sh) >= 3
+
+## 安装
+
+部署 ack-spark-operator 组件请按照如下步骤进行操作：
+
+1. 登录[容器服务管理控制台](https://cs.console.aliyun.com/)，在左侧导航栏**选择市场** > **应用市场**。
+2. 在**应用市场**页面，搜索 `ack-spark-operator`，然后单击该应用。
+3. 在**应用详情**页面，单击右上角的**一键部署**，然后按照页面提示进行部署。
+4. 在**基本信息**页面，填写**目标集群**、**命名空间**和**发布名称**后，单击**下一步**。
+5. 在**参数配置**页面，选择Chart版本，将参数配置完成后，单击**确定**。
+
+{{- define "chart.valuesHeader" }}
+## 配置项
+{{- end }}
+
+{{ template "chart.valuesSection" . }}
+
+{{- define "chart.maintainersHeader" }}
+## 维护者
+{{- end }}
+
+{{- define "chart.maintainersTable" }}
+| 姓名 | 邮件 |
+| ---- | ------ |
+{{- range .Maintainers }}
+| {{ .Name }} | {{ if .Email }}<{{ .Email }}>{{ end }} |
+{{- end }}
+{{- end }}
+
+{{ template "chart.maintainersSection" . }}
+
+## 发布说明
+
+| 版本号 | 变更日期 | 变更内容 |
+| --- | --- | --- |
+{{- $file := .Files.Get "CHANGELOG-zh_CN.yaml" | fromYaml }}
+{{- range $changelog := $file.changelogs }}
+| {{ $changelog.version }} | {{ $changelog.date }} | {{- range $index, $change := $changelog.changes }}
+{{- printf "（%d）%s<br>" ($index | add 1) $change }}
+{{- end }} |
+{{- end }}
