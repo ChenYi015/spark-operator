@@ -36,9 +36,9 @@ Spark Operator 是专门为在 Kubernetes 集群中运行 Spark 工作负载而�
 | nameOverride | string | `"spark-operator"` | 部分覆盖发布名称的名字 |
 | fullnameOverride | string | `""` | 完全覆盖发布名称的名字 |
 | commonLabels | object | `{}` | 将会添加标签至所创建的资源 |
-| image.registry | string | `"registry-__ACK_REGION_ID__-vpc.ack.aliyuncs.com"` | 镜像仓库 |
-| image.repository | string | `"acs/spark-operator"` | 镜像名称 |
-| image.tag | string | `"2.0.0-ack"` | 镜像标签 |
+| image.registry | string | `"docker.io"` | 镜像仓库 |
+| image.repository | string | `"kubeflow/spark-operator"` | 镜像名称 |
+| image.tag | string | 如果未指定，将使用本 Helm chart 的 appVersion 作为标签. | 镜像标签 |
 | image.pullPolicy | string | `"IfNotPresent"` | 镜像拉取策略 |
 | image.pullSecrets | list | `[]` | 镜像拉取秘钥 |
 | controller.replicas | int | `1` | 控制器副本数量 |
