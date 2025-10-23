@@ -17,8 +17,8 @@ concurrency:
 env:
   SEMVER_PATTERN: '^v([0-9]+)\.([0-9]+)\.([0-9]+)(-rc\.([0-9]+))?$'
   IMAGE_REGISTRY: ghcr.io
-  OPERATOR_IMAGE_REPOSITORY: ${{ github.repository }}/controller
-  KUBECTL_IMAGE_REPOSITORY: ${{ github.repository }}/kubectl
+  OPERATOR_IMAGE_REPOSITORY: chenyi015/spark-operator/controller
+  KUBECTL_IMAGE_REPOSITORY: chenyi015/spark-operator/kubectl
   KUBECTL_VERSION: 1.33.2
 
 jobs:
