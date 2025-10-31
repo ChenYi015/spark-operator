@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
 	"github.com/kubeflow/spark-operator/v2/api/v1beta2"
@@ -90,6 +91,8 @@ func (d *SparkPodDefaulter) Default(ctx context.Context, obj runtime.Object) err
 		return fmt.Errorf("failed to get SparkApplication %s/%s: %v", namespace, appName, err)
 	}
 
+
+	logger := log.FromContext(ctx)
 	logger.Info("Mutating Spark pod", "name", pod.Name, "namespace", namespace, "phase", pod.Status.Phase)
 	if err := mutateSparkPod(pod, app); err != nil {
 		logger.Info("Denying Spark pod", "name", pod.Name, "namespace", namespace, "errorMessage", err.Error())
@@ -128,7 +131,6 @@ func addMemoryLimit(pod *corev1.Pod, app *v1beta2.SparkApplication) error {
 
 	// Apply the memory limit to the container's resources
 	pod.Spec.Containers[i].Resources.Limits[corev1.ResourceMemory] = limitQuantity
-	logger.V(1).Info("Added memory limit to Spark container in pod", "name", pod.Name, "namespace", pod.Namespace, "memoryLimit", limitQuantity.String())
 	return nil
 }
 
@@ -340,7 +342,7 @@ func addGeneralConfigMaps(pod *corev1.Pod, app *v1beta2.SparkApplication) error 
 		volumeName := namePath.Name + "-vol"
 		if len(volumeName) > maxNameLength {
 			volumeName = volumeName[0:maxNameLength]
-			logger.Info(fmt.Sprintf("ConfigMap volume name is too long. Truncating to length %d. Result: %s.", maxNameLength, volumeName))
+			// logger.Info(fmt.Sprintf("ConfigMap volume name is too long. Truncating to length %d. Result: %s.", maxNameLength, volumeName))
 		}
 		if err := addConfigMapVolume(pod, namePath.Name, volumeName); err != nil {
 			return err
@@ -633,11 +635,11 @@ func addGPU(pod *corev1.Pod, app *v1beta2.SparkApplication) error {
 		return nil
 	}
 	if gpu.Name == "" {
-		logger.V(1).Info(fmt.Sprintf("Please specify GPU resource name, such as: nvidia.com/gpu, amd.com/gpu etc. Current gpu spec: %+v", gpu))
+		// logger.V(1).Info(fmt.Sprintf("Please specify GPU resource name, such as: nvidia.com/gpu, amd.com/gpu etc. Current gpu spec: %+v", gpu))
 		return nil
 	}
 	if gpu.Quantity <= 0 {
-		logger.V(1).Info(fmt.Sprintf("GPU Quantity must be positive. Current gpu spec: %+v", gpu))
+		// logger.V(1).Info(fmt.Sprintf("GPU Quantity must be positive. Current gpu spec: %+v", gpu))
 		return nil
 	}
 

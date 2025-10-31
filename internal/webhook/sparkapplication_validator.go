@@ -24,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
 	"github.com/kubeflow/spark-operator/v2/api/v1beta2"
@@ -57,7 +58,9 @@ func (v *SparkApplicationValidator) ValidateCreate(ctx context.Context, obj runt
 	if !ok {
 		return nil, nil
 	}
-	logger.Info("Validating SparkApplication create", "name", app.Name, "namespace", app.Namespace, "state", util.GetApplicationState(app))
+
+	logger := log.FromContext(ctx)
+	logger.Info("Validating SparkApplication create", "state", util.GetApplicationState(app))
 	if err := v.validateSpec(ctx, app); err != nil {
 		return nil, err
 	}
@@ -83,6 +86,7 @@ func (v *SparkApplicationValidator) ValidateUpdate(ctx context.Context, oldObj r
 		return nil, nil
 	}
 
+	logger := log.FromContext(ctx)
 	logger.Info("Validating SparkApplication update", "name", newApp.Name, "namespace", newApp.Namespace)
 
 	// Skip validating when spec does not change.
@@ -110,12 +114,15 @@ func (v *SparkApplicationValidator) ValidateDelete(ctx context.Context, obj runt
 	if !ok {
 		return nil, nil
 	}
-	logger.Info("Validating SparkApplication delete", "name", app.Name, "namespace", app.Namespace, "state", util.GetApplicationState(app))
+
+	logger := log.FromContext(ctx)
+	logger.Info("Validating SparkApplication delete", "state", util.GetApplicationState(app))
 	return nil, nil
 }
 
-func (v *SparkApplicationValidator) validateSpec(_ context.Context, app *v1beta2.SparkApplication) error {
-	logger.V(1).Info("Validating SparkApplication spec", "name", app.Name, "namespace", app.Namespace, "state", util.GetApplicationState(app))
+func (v *SparkApplicationValidator) validateSpec(ctx context.Context, app *v1beta2.SparkApplication) error {
+	logger := log.FromContext(ctx)
+	logger.V(1).Info("Validating SparkApplication spec", "state", util.GetApplicationState(app))
 
 	if err := v.validateSparkVersion(app); err != nil {
 		return err
@@ -159,7 +166,8 @@ func (v *SparkApplicationValidator) validateSparkVersion(app *v1beta2.SparkAppli
 }
 
 func (v *SparkApplicationValidator) validateResourceUsage(ctx context.Context, app *v1beta2.SparkApplication) error {
-	logger.V(1).Info("Validating SparkApplication resource usage", "name", app.Name, "namespace", app.Namespace, "state", util.GetApplicationState(app))
+	logger := log.FromContext(ctx)
+	logger.V(1).Info("Validating SparkApplication resource usage", "state", util.GetApplicationState(app))
 
 	requests, err := getResourceList(app)
 	if err != nil {
